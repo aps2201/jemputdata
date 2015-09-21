@@ -1,84 +1,12 @@
 library(XML)
-pilkada1=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=Dashboard/paslon&tahap=3")
-pilkada2=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=2&tahap=3")
-pilkada3=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=3&tahap=3")
-pilkada4=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=4&tahap=3")
-pilkada5=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=5&tahap=3")
-pilkada6=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=6&tahap=3")
-pilkada7=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=7&tahap=3")
-pilkada8=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=8&tahap=3")
-pilkada9=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=9&tahap=3")
-pilkada10=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=10&tahap=3")
-pilkada11=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=11&tahap=3")
-pilkada12=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=12&tahap=3")
-pilkada13=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=13&tahap=3")
-pilkada14=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=14&tahap=3")
-pilkada15=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=15&tahap=3")
-pilkada16=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=16&tahap=3")
-pilkada17=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=17&tahap=3")
-pilkada18=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=18&tahap=3")
-pilkada19=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=19&tahap=3")
-pilkada20=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=20&tahap=3")
-pilkada21=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=21&tahap=3")
-pilkada22=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=22&tahap=3")
-pilkada23=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=23&tahap=3")
-pilkada24=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=24&tahap=3")
-pilkada25=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=25&tahap=3")
-pilkada26=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=26&tahap=3")
-pilkada27=readHTMLTable("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&page=27&tahap=3")
+list=1:27
+url=paste0("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&tahap=3&page=",list)
+paslon=lapply(url,readHTMLTable)
 
-datapilkada2015=rbind(pilkada1[[2]],
-                      pilkada2[[2]],
-                      pilkada3[[2]],
-                      pilkada4[[2]],
-                      pilkada5[[2]],
-                      pilkada6[[2]],
-                      pilkada7[[2]],
-                      pilkada8[[2]],
-                      pilkada9[[2]],
-                      pilkada10[[2]],
-                      pilkada11[[2]],
-                      pilkada12[[2]],
-                      pilkada13[[2]],
-                      pilkada14[[2]],
-                      pilkada15[[2]],
-                      pilkada16[[2]],
-                      pilkada17[[2]],
-                      pilkada18[[2]],
-                      pilkada19[[2]],
-                      pilkada20[[2]],
-                      pilkada21[[2]],
-                      pilkada22[[2]],
-                      pilkada23[[2]],
-                      pilkada24[[2]],
-                      pilkada25[[2]],
-                      pilkada26[[2]],
-                      pilkada27[[2]])
-rm(pilkada1,
-   pilkada2,
-   pilkada3,
-   pilkada4,
-   pilkada5,
-   pilkada6,
-   pilkada7,
-   pilkada8,
-   pilkada9,
-   pilkada10,
-   pilkada11,
-   pilkada12,
-   pilkada13,
-   pilkada14,
-   pilkada15,
-   pilkada16,
-   pilkada17,
-   pilkada18,
-   pilkada19,
-   pilkada20,
-   pilkada21,
-   pilkada22,
-   pilkada23,
-   pilkada24,
-   pilkada25,
-   pilkada26,
-   pilkada27)
-write.csv(datapilkada2015,"datapilkada2015.csv")
+paslonpilkada2015=data.frame()
+for (i in 1:length(paslon)){
+       paslonpilkada2015=rbind(paslonpilkada2015,paslon[[i]][[2]])
+       
+}
+
+write.csv(paslondatapilkada2015,"datapilkada2015.csv")
