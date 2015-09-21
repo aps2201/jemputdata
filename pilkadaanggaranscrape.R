@@ -32,4 +32,4 @@ anggaranpaslonfilelist=gsub("\\s","%20",anggaranpaslonfilelist)
 ##do
 #for (i in anggaranpaslonfilelist){
 #download.file(i,destfile=paste0(length(i),".pdf"))
-}
+#}
