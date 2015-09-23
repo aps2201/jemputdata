@@ -28,8 +28,5 @@ anggaranpaslonfilelist=anggaranpaslonfilelist[-c(1,2,597),]
 anggaranpaslonfilelist=paste0(urldana,anggaranpaslonfilelist)
 anggaranpaslonfilelist=gsub("\\s","%20",anggaranpaslonfilelist)
 
-
-##do
-#for (i in anggaranpaslonfilelist){
-#download.file(i,destfile=paste0(length(i),".pdf"))
-#}
+#for download 
+write(anggaranpaslonfilelist,"listurldana.txt")
