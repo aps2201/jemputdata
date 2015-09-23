@@ -2,4 +2,4 @@ jemputdata=read.csv("https://docs.google.com/spreadsheets/d/1qls13W-2Bm8FWIAzSOp
 jemputdata$Pekerjaan=tolower(x$Pekerjaan)
 colnames(jemputdata)=tolower(colnames(jemputdata))
 #weeklybackup
-write.csv(x,paste0("./jemputdatabackup/","jemputdata2015",format(Sys.time(),"%d%m%Y"),".csv"))
+write.csv(x,paste0("./jemputdatabackup/","jemputdata2015",format(Sys.time(),"%Y%m%d"),".csv"))
