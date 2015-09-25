@@ -3,6 +3,7 @@ library(data.table)
 library(XML)
 x=read.csv("datapilkada2015_3.csv")
 id_paslon=as.character(unique(x$ID))
+rm(x)
 idpaslon=paste0("http://infopilkada.kpu.go.id/index.php?r=Dashboard/viewdetilparpol&id=",id_paslon)
 
 calon=lapply(idpaslon,readHTMLTable,header=F,as.data.frame=F)
@@ -35,3 +36,6 @@ colnames(datawakil)=c("Nama Wakil Calon","Jenis Kelamin","Tempat Lahir",
 write.csv(dataketua,"dataketua.csv")
 write.csv(datawakil,"datawakil.csv")
 write.csv(id_paslon,"idpaslon.csv")
+
+#cleanup
+rm(i,calon,id_paslon,idpaslon,ketua,wakil)
