@@ -1,5 +1,5 @@
 library(XML)
-list=1:27
+list=1:28
 url=paste0("http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&tahap=3&page=",list)
 paslon=lapply(url,readHTMLTable)
 
@@ -9,4 +9,5 @@ for (i in list){
        
 }
 
-write.csv(paslondatapilkada2015,"datapilkada2015.csv")
+
+write.csv(paslonpilkada2015,"datapilkada2015.csv")

@@ -1,7 +1,7 @@
 library(plyr)
 library(data.table)
 library(XML)
-x=read.csv("datapilkada2015_3.csv")
+x=read.csv("datapilkada2015.csv")
 id_paslon=as.character(unique(x$ID))
 rm(x)
 idpaslon=paste0("http://infopilkada.kpu.go.id/index.php?r=Dashboard/viewdetilparpol&id=",id_paslon)
