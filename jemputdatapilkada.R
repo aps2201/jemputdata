@@ -65,7 +65,6 @@ for (i in list){
        #datalengkap
        paslonpilkada2015=rbind(paslonpilkada2015,wakilaja)
        paslonpilkada2015=dplyr::mutate(paslonpilkada2015,id=1:length(rownames(paslonpilkada2015)))
-       rm(wakilaja)
        colnames(paslonpilkada2015)=c("id_paslon","dapil","nama",
                                      "kelamin","pekerjaan","dukungan",
                                      "pendukung","jabatan","id")
@@ -74,15 +73,15 @@ for (i in list){
 #bikin list url
 id_paslon=as.character(unique(paslonpilkada2015$id_paslon))
 url=paste0("http://infopilkada.kpu.go.id/index.php?r=Dashboard/viewdetilparpol&id=",
-                id_paslon)
-calon=lapply(idpaslon,readHTMLTable,header=F,as.data.frame=F)
+           id_paslon)
+calon=lapply(url,readHTMLTable,header=F,as.data.frame=F)
 
        #split to data frames
        ketua=list()
        wakil=list()
        dataketua=data.frame()
        datawakil=data.frame()
-       for (i in 1:length(idpaslon)){
+       for (i in 1:length(id_paslon)){
               ketua=c(ketua,calon[[i]][1])
               wakil=c(wakil,calon[[i]][2])
               dataketua=rbind.fill(dataketua,
@@ -108,9 +107,14 @@ datawakil=dplyr::mutate(datawakil,
 
 datarinci=rbind(dataketua,datawakil)
 datarinci=dplyr::mutate(datarinci,id=1:length(rownames(datarinci)))
-#cleanup
-rm(i,calon,id_paslon,idpaslon,ketua,wakil)
+
 
 # final -------------------------------------------------------------------
 #gabung gabung
 paslonpilkada2015=merge(paslonpilkada2015,datarinci[,-c(2,3,7,9)],by="id")
+
+#bersih-bersih
+rm(list=setdiff(ls(), "paslonpilkada2015"))
+
+#output
+write.csv(paslonpilkada2015,paste0("paslonpilkada",format(Sys.time(),"%Y%m%d"),".csv"),row.names = F)
