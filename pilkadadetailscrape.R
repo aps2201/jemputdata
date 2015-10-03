@@ -27,9 +27,9 @@ for (i in 1:length(idpaslon)){
 }
 
 #name columns
-colnames(dataketua)=c("Idwilayah","Nama Calon","Jenis Kelamin","Tempat Lahir",
+colnames(dataketua)=c("Idwilayah","nama_paslon","Jenis Kelamin","Tempat Lahir",
                       "Tanggal Lahir","Alamat","Pekerjaan","Status")
-colnames(datawakil)=c("Nama Wakil Calon","Jenis Kelamin","Tempat Lahir",
+colnames(datawakil)=c("nama_paslon","Jenis Kelamin","Tempat Lahir",
                      "Tanggal Lahir","Alamat","Pekerjaan",
                      "Status")
 

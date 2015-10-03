@@ -1,14 +1,113 @@
-datajemput="https://docs.google.com/spreadsheets/d/1qls13W-2Bm8FWIAzSOpdSwxYEW34t1dC63nilIaqQyU/pub?gid=0&single=true&output=csv"
-datakpu="https://docs.google.com/spreadsheets/d/1YHfa3M85tuckuGK9p9WSlL_2Cz1ADE4Rszzrv6hXWxw/pub?gid=1975305692&single=true&output=csv"
-#Dataset data entri
-jemputdata=read.csv(datajemput)
-jemputdata$Pekerjaan=tolower(jemputdata$Pekerjaan)
-colnames(jemputdata)=tolower(colnames(jemputdata))
-#weeklybackup
-write.csv(jemputdata,paste0("./jemputdatabackup/","jemputdatapilkada",format(Sys.time(),"%Y%m%d"),".csv"))
+#load semua library
+library(dplyr)
+library(plyr)
+library(data.table)
+library(XML)
 
-#Dataset KPU
-kpudata=read.csv(datakpu)
-colnames(kpudata)=tolower(colnames(kpudata))
-#weeklybackup
-write.csv(kpudata,paste0("./jemputdatabackup/","darikpu",format(Sys.time(),"%Y%m%d"),".csv"))
+
+# Tahap I: data peserta tetap ---------------------------------------------
+#bikin list referensi untuk tarik data
+#sesuaikan 'list' dengan jumlah halaman
+list=1:28
+
+#bikin url list
+url=paste0(
+       "http://infopilkada.kpu.go.id/index.php?r=dashboard/paslon&ajax=yw2&tahap=3&page=",
+           list
+       )
+       paslon=lapply(url,readHTMLTable)
+
+#tarik datanya dari list yang dibikin
+paslonpilkada2015=data.frame()
+for (i in list){
+       paslonpilkada2015=rbind(paslonpilkada2015,paslon[[i]][[2]])
+       }
+
+#rapih-rapih
+
+       #split wakil
+       wakilaja=data.frame()
+       wakilaja=rbind(wakilaja,paslonpilkada2015[,c(1:2,6:10)])
+       #bersihin data utama
+       paslonpilkada2015=paslonpilkada2015[,-c(6:8,11)]       
+       #define jabatan
+       wakilaja=dplyr::mutate(wakilaja,
+                              jabatan=ifelse(
+                                     rownames(wakilaja) %in% grep(
+                                     "^kota",wakilaja$`DAERAH PEMILIHAN`,
+                                     ignore.case = T),
+                                     "wakil walikota",
+                                     ifelse(
+                                            rownames(wakilaja) %in% grep(
+                                            "^kab\\.",wakilaja$`DAERAH PEMILIHAN`,
+                                                   ignore.case = T),
+                                            "wakil bupati","wakil gubernur"
+                                     )
+                                     )
+                              )
+       
+       paslonpilkada2015=dplyr::mutate(wakilaja,
+               jabatan=ifelse(
+                      rownames(wakilaja) %in% grep(
+                             "^kota",wakilaja$`DAERAH PEMILIHAN`,
+                             ignore.case = T),
+                      "walikota",
+                      ifelse(
+                             rownames(wakilaja) %in% grep(
+                                    "^kab\\.",wakilaja$`DAERAH PEMILIHAN`,
+                                    ignore.case = T),
+                             "bupati","gubernur"
+                             )
+                      )
+               )
+       colnames(wakilaja)=colnames(paslonpilkada2015)
+
+       #datalengkap
+       paslonpilkada2015=rbind(paslonpilkada2015,wakilaja)
+       paslonpilkada2015=dplyr::mutate(paslonpilkada2015,id=1:length(rownames(paslonpilkada2015)))
+       rm(wakilaja)
+       colnames(paslonpilkada2015)=c("id_paslon","dapil","nama",
+                                     "kelamin","pekerjaan","dukungan",
+                                     "pendukung","jabatan")
+
+       # Tahap II: rincian peserta tetap ---------------------------------------------
+#bikin list url
+id_paslon=as.character(unique(paslonpilkada2015$id_paslon))
+url=paste0("http://infopilkada.kpu.go.id/index.php?r=Dashboard/viewdetilparpol&id=",
+                id_paslon)
+calon=lapply(idpaslon,readHTMLTable,header=F,as.data.frame=F)
+
+       #split to data frames
+       ketua=list()
+       wakil=list()
+       dataketua=data.frame()
+       datawakil=data.frame()
+       for (i in 1:length(idpaslon)){
+              ketua=c(ketua,calon[[i]][1])
+              wakil=c(wakil,calon[[i]][2])
+              dataketua=rbind.fill(dataketua,
+                                   as.data.frame(
+                                          t(
+                                          as.data.frame(ketua[[i]][2]))))
+              datawakil=rbind.fill(datawakil,
+                                   as.data.frame(
+                                          t(
+                                          as.data.frame(wakil[[i]][2]))))
+}
+
+#name columns
+colnames(dataketua)=c("idwilayah","nama","kelamin","tempat.lahir",
+                      "tanggal_lahir","alamat","pekerjaan","status")
+colnames(datawakil)=c("nama_paslon","kelamin","tempat.lahir",
+                      "tanggal.lahir","alamat","pekerjaan",
+                      "status")
+dataketua=dplyr::mutate(dataketua,
+                        id_paslon=id_paslon)
+datawakil=dplyr::mutate(datawakil,
+                        id_paslon=id_paslon,idwilayah=dataketua$idwilayah)
+#cleanup
+rm(i,calon,id_paslon,idpaslon,ketua,wakil)
+
+# final -------------------------------------------------------------------
+
+#gabung gabung
