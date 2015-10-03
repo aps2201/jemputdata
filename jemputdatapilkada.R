@@ -46,15 +46,15 @@ for (i in list){
                                      )
                               )
        
-       paslonpilkada2015=dplyr::mutate(wakilaja,
+       paslonpilkada2015=dplyr::mutate(paslonpilkada2015,
                jabatan=ifelse(
-                      rownames(wakilaja) %in% grep(
-                             "^kota",wakilaja$`DAERAH PEMILIHAN`,
+                      rownames(paslonpilkada2015) %in% grep(
+                             "^kota",paslonpilkada2015$`DAERAH PEMILIHAN`,
                              ignore.case = T),
                       "walikota",
                       ifelse(
-                             rownames(wakilaja) %in% grep(
-                                    "^kab\\.",wakilaja$`DAERAH PEMILIHAN`,
+                             rownames(paslonpilkada2015) %in% grep(
+                                    "^kab\\.",paslonpilkada2015$`DAERAH PEMILIHAN`,
                                     ignore.case = T),
                              "bupati","gubernur"
                              )
@@ -68,9 +68,9 @@ for (i in list){
        rm(wakilaja)
        colnames(paslonpilkada2015)=c("id_paslon","dapil","nama",
                                      "kelamin","pekerjaan","dukungan",
-                                     "pendukung","jabatan")
+                                     "pendukung","jabatan","id")
 
-       # Tahap II: rincian peserta tetap ---------------------------------------------
+# Tahap II: rincian peserta tetap ---------------------------------------------
 #bikin list url
 id_paslon=as.character(unique(paslonpilkada2015$id_paslon))
 url=paste0("http://infopilkada.kpu.go.id/index.php?r=Dashboard/viewdetilparpol&id=",
@@ -97,17 +97,20 @@ calon=lapply(idpaslon,readHTMLTable,header=F,as.data.frame=F)
 
 #name columns
 colnames(dataketua)=c("idwilayah","nama","kelamin","tempat.lahir",
-                      "tanggal_lahir","alamat","pekerjaan","status")
-colnames(datawakil)=c("nama_paslon","kelamin","tempat.lahir",
+                      "tanggal.lahir","alamat","pekerjaan","status")
+colnames(datawakil)=c("nama","kelamin","tempat.lahir",
                       "tanggal.lahir","alamat","pekerjaan",
                       "status")
 dataketua=dplyr::mutate(dataketua,
                         id_paslon=id_paslon)
 datawakil=dplyr::mutate(datawakil,
                         id_paslon=id_paslon,idwilayah=dataketua$idwilayah)
+
+datarinci=rbind(dataketua,datawakil)
+datarinci=dplyr::mutate(datarinci,id=1:length(rownames(datarinci)))
 #cleanup
 rm(i,calon,id_paslon,idpaslon,ketua,wakil)
 
 # final -------------------------------------------------------------------
-
 #gabung gabung
+paslonpilkada2015=merge(paslonpilkada2015,datarinci[,-c(2,3,7,9)],by="id")
