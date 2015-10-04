@@ -116,5 +116,9 @@ paslonpilkada2015=merge(paslonpilkada2015,datarinci[,-c(2,3,7,9)],by="id")
 #bersih-bersih
 rm(list=setdiff(ls(), "paslonpilkada2015"))
 
+#rapih-rapih
+paslonpilkada2015$dapil=gsub("^KAB\\.","KABUPATEN",paslonpilkada2015$dapil)
+paslonpilkada2015$pekerjaan=tolower(paslonpilkada2015$pekerjaan)
+
 #output
 write.csv(paslonpilkada2015,paste0("paslonpilkada",format(Sys.time(),"%Y%m%d"),".csv"),row.names = F)
