@@ -1,6 +1,6 @@
 #Datalucu
 
-data=read.csv("datapilkada2015_4.csv")
+data=read.csv("paslonpilkada20151003.csv")
 
 colnames(data)=gsub("\\.","_",colnames(data))
 colnames(data)=tolower(colnames(data))
@@ -10,8 +10,9 @@ kerjaan=data$pekerjaan
 kerjaan=tolower(kerjaan)
 kerjaan=table(kerjaan)
 
-write.csv(kerjaan,"ctkerjaan.csv")
-write.csv(aggregate(jenis_kelamin~daerah_pemilihan,data,table),"ctdaerahkelamin.csv")
-write.csv(aggregate(jenis_dukungan~daerah_pemilihan,data,table),"ctdaerahdukungan.csv")
-write.csv(aggregate(jenis_kelamin~jabatan,data,table),"ctkelaminjabatan.csv")
-write.csv(aggregate(jenis_kelamin~jenis_dukungan,data,table),"ctkelamindukungan.csv")
+#crosstabs
+write.csv(kerjaan,"./crosstabs/ctkerjaan.csv")
+write.csv(aggregate(kelamin~dapil,data,table),"./crosstabs/ctdaerahkelamin.csv")
+write.csv(aggregate(dukungan~dapil,data,table),"./crosstabs/ctdaerahdukungan.csv")
+write.csv(aggregate(kelamin~jabatan,data,table),"./crosstabs/ctkelaminjabatan.csv")
+write.csv(aggregate(kelamin~dukungan,data,table),"./crosstabs/ctkelamindukungan.csv")
